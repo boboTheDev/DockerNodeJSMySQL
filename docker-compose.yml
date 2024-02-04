@@ -1,0 +1,28 @@
+version: "0.1"
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: proddb testdb devdb
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminpassword
+    ports:
+      - "3306:3306"
+
+  nodejs_app:
+    build:
+      context: .
+      dockerfile: Dockerfile # Assuming your Dockerfile is in the same directory as docker-compose.yml
+    container_name: nodejs_container
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: mysql
+      DB_USER: admin
+      DB_PASSWORD: adminpassword
+      DB_DATABASE: proddb testdb devdb
